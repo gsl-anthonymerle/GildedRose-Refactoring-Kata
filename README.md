@@ -61,3 +61,15 @@ Please don't write too much code in the starting position or add too many unit t
 
 If your programming language doesn't have an easy way to add a command-line interface, then the TextTest fixture is probably not necessary.
 
+## Build and test using any of the following
+
+Command line:
+- `swift test`
+
+Xcode:
+- Open this "swift" folder to open package
+- In the Xcode menu, select Product > Test to run tests
+
+AppCode:
+- Open this "swift" folder to open package
+- Select "GildedRoseTests" configuration and run

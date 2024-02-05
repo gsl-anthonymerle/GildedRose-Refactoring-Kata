@@ -7,3 +7,5 @@ vendor
 *.iml
 **/*.received.*
 venv
+
+.swiftpm

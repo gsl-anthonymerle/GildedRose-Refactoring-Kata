@@ -5,57 +5,61 @@ public class GildedRose {
         self.items = items
     }
 
+    // Morgan's Law
+    // !A && !B <=> !(A || B)
     fileprivate func updateQuality(of item: Item) {
-        if item.name != "Aged Brie", item.name != "Backstage passes to a TAFKAL80ETC concert" {
-            if item.quality > 0 {
-                if item.name != "Sulfuras, Hand of Ragnaros" {
-                    item.quality = item.quality - 1
-                }
+        let difference: Int
+
+        if item.name == "Aged Brie" {
+            if item.sellIn > 0 {
+                difference = 1
+            } else {
+                difference = 2
             }
+        } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
+            if item.sellIn > 10 {
+                difference = 1
+            } else if item.sellIn > 5 {
+                difference = 2
+            } else if item.sellIn > 0 {
+                difference = 3
+            } else {
+                difference =  -item.quality
+            }
+        } else if item.name == "Sulfuras, Hand of Ragnaros" {
+            difference = 0
         } else {
-            if item.quality < 50 {
-                item.quality = item.quality + 1
-                
-                if item.name == "Backstage passes to a TAFKAL80ETC concert" {
-                    if item.sellIn <= 10 {
-                        if item.quality < 50 {
-                            item.quality = item.quality + 1
-                        }
-                    }
-                    
-                    if item.sellIn <= 5 {
-                        if item.quality < 50 {
-                            item.quality = item.quality + 1
-                        }
-                    }
-                }
+            if item.sellIn > 0 {
+                difference = -1
+            } else {
+                difference = -2
             }
         }
-        
-        if item.name != "Sulfuras, Hand of Ragnaros" {
+
+        if difference != 0 {
+            item.updateQuality(difference: difference)
             item.sellIn = item.sellIn - 1
         }
-        
-        if item.sellIn < 0 {
-            if item.name != "Aged Brie" {
-                if item.name != "Backstage passes to a TAFKAL80ETC concert" {
-                    if item.quality > 0 {
-                        if item.name != "Sulfuras, Hand of Ragnaros" {
-                            item.quality = item.quality - 1
-                        }
-                    }
-                } else {
-                    item.quality = item.quality - item.quality
-                }
-            } else {
-                if item.quality < 50 {
-                    item.quality = item.quality + 1
-                }
-            }
-        }
     }
-    
+
     public func updateQuality() {
         items.forEach(updateQuality(of:))
+    }
+}
+
+extension Item {
+    func updateQuality(difference: Int) {
+        /*
+        // 0 < Q < 50
+        // clamp(x, min, max) -> x such that x < min && x > max
+        var newQuality = quality + difference
+
+        newQuality = min(50, newQuality) // will never exceed 50
+        newQuality = max(0, newQuality) // will never drops below 0
+
+        quality = newQuality
+        */
+
+        quality = max(0, min(50, quality + difference))
     }
 }

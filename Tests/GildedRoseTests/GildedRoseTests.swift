@@ -101,4 +101,28 @@ class GildedRoseTests: XCTestCase {
         XCTAssertEqual(app.items[0].quality, expectedQuality)
         XCTAssertEqual(app.items[0].sellIn, expectedSellIn)
     }
+
+    func testItemClamp50() {
+        let item = Item(name: "Any", sellIn: 10, quality: 48)
+
+        item.updateQuality(difference: 5)
+
+        XCTAssertEqual(item.quality, 50)
+    }
+
+    func testItemClamp0() {
+        let item = Item(name: "Any", sellIn: 10, quality: 10)
+
+        item.updateQuality(difference: -15)
+
+        XCTAssertEqual(item.quality, 0)
+    }
+
+    func testItemClampMiddle() {
+        let item = Item(name: "Any", sellIn: 10, quality: 30)
+
+        item.updateQuality(difference: 5)
+
+        XCTAssertEqual(item.quality, 35)
+    }
 }

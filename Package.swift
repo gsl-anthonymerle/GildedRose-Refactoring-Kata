@@ -1,9 +1,10 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.9
 
 import PackageDescription
 
 let package = Package(
     name: "GildedRose",
+    platforms: [.macOS(.v14)],
     products: [
         .library(
             name: "GildedRose",

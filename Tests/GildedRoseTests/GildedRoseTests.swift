@@ -64,6 +64,11 @@ class GildedRoseTests: XCTestCase {
             expectedQuality: 12,
             expectedSellIn: 9
         )
+        assertItemUpdate(
+            Item(name: "Backstage passes to a Shenanigan concert", sellIn: 10, quality: 10),
+            expectedQuality: 12,
+            expectedSellIn: 9
+        )
     }
 
     func testBackstagePassWithSellInLessThan0() {
@@ -72,11 +77,21 @@ class GildedRoseTests: XCTestCase {
             expectedQuality: 0,
             expectedSellIn: -1
         )
+        assertItemUpdate(
+            Item(name: "Backstage passes to a Shenanigan concert", sellIn: 0, quality: 10),
+            expectedQuality: 0,
+            expectedSellIn: -1
+        )
     }
 
     func testBackstagePassWithSellInLessThan6() {
         assertItemUpdate(
             Item(name: "Backstage passes to a TAFKAL80ETC concert", sellIn: 5, quality: 10),
+            expectedQuality: 13,
+            expectedSellIn: 4
+        )
+        assertItemUpdate(
+            Item(name: "Backstage passes to a Shenanigan concert", sellIn: 5, quality: 10),
             expectedQuality: 13,
             expectedSellIn: 4
         )
@@ -140,5 +155,21 @@ class GildedRoseTests: XCTestCase {
         item.updateQuality(difference: 5)
 
         XCTAssertEqual(item.quality, 35)
+    }
+
+    func testItemType() {
+        let items = [
+            Item(name: "Any Item", sellIn: 10, quality: 10),
+            Item(name: "Aged Brie", sellIn: 10, quality: 10),
+            Item(name: "Backstage passes to something", sellIn: 10, quality: 10),
+            Item(name: "Sulfuras, item of chaos", sellIn: 10, quality: 10),
+            Item(name: "Conjured banana sword", sellIn: 10, quality: 10)
+        ]
+
+        XCTAssertEqual(items[0].itemType, .regular)
+        XCTAssertEqual(items[1].itemType, .agedBrie)
+        XCTAssertEqual(items[2].itemType, .backstagePass)
+        XCTAssertEqual(items[3].itemType, .sulfuras)
+        XCTAssertEqual(items[4].itemType, .conjured)
     }
 }

@@ -1,5 +1,5 @@
 struct Rule {
-    let match: String
+    let match: ItemType
     let qualityDifference: (Item) -> Int
 }
 
@@ -11,10 +11,14 @@ public class GildedRose {
     }
 
     let rules: [Rule] = [
-        Rule(match: "Aged Brie", qualityDifference: { item in
+        Rule(match: .regular, qualityDifference: { item in
+            item.sellIn > 0 ? -1 : -2
+        }),
+        Rule(match: .agedBrie, qualityDifference: { item in
             item.sellIn > 0 ? 1 : 2
         }),
-        Rule(match: "Backstage passes to a TAFKAL80ETC concert", qualityDifference: { item in
+        // Any item which name starts with "Backstage passes"
+        Rule(match: .backstagePass, qualityDifference: { item in
             if item.sellIn > 10 {
                 return 1
             } else if item.sellIn > 5 {
@@ -25,26 +29,19 @@ public class GildedRose {
                 return -item.quality
             }
         }),
-        Rule(match: "Sulfuras, Hand of Ragnaros", qualityDifference: { _ in 0 }),
-        Rule(match: "Conjured", qualityDifference: { item in
+        // Any item which name starts with "Sulfuras"
+        Rule(match: .sulfuras, qualityDifference: { _ in 0 }),
+        Rule(match: .conjured, qualityDifference: { item in
             item.sellIn > 0 ? -2 : -4
         })
     ]
     
-    // Morgan's Law
-    // !A && !B <=> !(A || B)
     fileprivate func updateQuality(of item: Item) {
-        let difference: Int
-
-        if let rule = rules.first(where: { item.name == $0.match }) {
-            difference = rule.qualityDifference(item)
-        } else {
-            if item.sellIn > 0 {
-                difference = -1
-            } else {
-                difference = -2
-            }
+        guard let rule = rules.first(where: { item.itemType == $0.match }) else {
+            return
         }
+
+        let difference = rule.qualityDifference(item)
 
         if difference != 0 {
             item.updateQuality(difference: difference)

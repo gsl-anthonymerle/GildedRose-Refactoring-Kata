@@ -28,6 +28,12 @@ public class GildedRose {
             }
         } else if item.name == "Sulfuras, Hand of Ragnaros" {
             difference = 0
+        } else if item.name == "Conjured" {
+            if item.sellIn > 0 {
+                difference = -2
+            } else {
+                difference = -4
+            }
         } else {
             if item.sellIn > 0 {
                 difference = -1

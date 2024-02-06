@@ -90,6 +90,22 @@ class GildedRoseTests: XCTestCase {
         )
     }
 
+    func testConjuredItem() {
+        assertItemUpdate(
+            Item(name: "Conjured", sellIn: 5, quality: 10),
+            expectedQuality: 8,
+            expectedSellIn: 4
+        )
+    }
+
+    func testConjuredItemWithSellInLessThan0() {
+        assertItemUpdate(
+            Item(name: "Conjured", sellIn: -1, quality: 10),
+            expectedQuality: 6,
+            expectedSellIn: -2
+        )
+    }
+
     private func assertItemUpdate(
         _ item: Item,
         expectedQuality: Int,

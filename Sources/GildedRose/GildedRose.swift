@@ -1,3 +1,10 @@
+enum ItemType: String {
+    case agedBrie = "Aged Brie"
+    case backstagePass = "Backstage passes to a TAFKAL80ETC concert"
+    case sulfuras = "Sulfuras, Hand of Ragnaros"
+    case regular
+}
+
 public class GildedRose {
     var items: [Item]
 
@@ -5,11 +12,22 @@ public class GildedRose {
         self.items = items
     }
 
+    // add tests
+    // using filters
+
     public func updateQuality() {
+//        items.filter { item in
+//            item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert"
+//        }
+//        .filter { item in
+//            item.quality > 0
+//        }
+
+
         for i in 0 ..< items.count {
-            if items[i].name != "Aged Brie", items[i].name != "Backstage passes to a TAFKAL80ETC concert" {
+            if items[i].itemType != .agedBrie, items[i].itemType != .backstagePass {
                 if items[i].quality > 0 {
-                    if items[i].name != "Sulfuras, Hand of Ragnaros" {
+                    if items[i].itemType != .sulfuras {
                         items[i].updateQuality(difference: -1)
                     }
                 }
@@ -17,7 +35,7 @@ public class GildedRose {
                 if items[i].quality < 50 {
                     items[i].updateQuality(difference: 1)
 
-                    if items[i].name == "Backstage passes to a TAFKAL80ETC concert" {
+                    if items[i].itemType == .backstagePass {
                         if items[i].sellIn < 11 {
                             if items[i].quality < 50 {
                                 items[i].updateQuality(difference: 1)
@@ -33,15 +51,15 @@ public class GildedRose {
                 }
             }
 
-            if items[i].name != "Sulfuras, Hand of Ragnaros" {
+            if items[i].itemType != .sulfuras {
                 items[i].sellIn = items[i].sellIn - 1
             }
 
             if items[i].sellIn < 0 {
-                if items[i].name != "Aged Brie" {
-                    if items[i].name != "Backstage passes to a TAFKAL80ETC concert" {
+                if items[i].itemType != .agedBrie {
+                    if items[i].itemType != .backstagePass {
                         if items[i].quality > 0 {
-                            if items[i].name != "Sulfuras, Hand of Ragnaros" {
+                            if items[i].itemType != .sulfuras {
                                 items[i].updateQuality(difference: -1)
                             }
                         }
@@ -74,5 +92,9 @@ public class GildedRose {
 extension Item {
     func updateQuality(difference: Int) {
         quality += difference
+    }
+
+    var itemType: ItemType {
+        ItemType(rawValue: self.name) ?? .regular
     }
 }

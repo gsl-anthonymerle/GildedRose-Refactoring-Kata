@@ -1,3 +1,8 @@
+struct Rule {
+    let match: String
+    let qualityDifference: (Item) -> Int
+}
+
 public class GildedRose {
     var items: [Item]
 
@@ -5,35 +10,34 @@ public class GildedRose {
         self.items = items
     }
 
+    let rules: [Rule] = [
+        Rule(match: "Aged Brie", qualityDifference: { item in
+            item.sellIn > 0 ? 1 : 2
+        }),
+        Rule(match: "Backstage passes to a TAFKAL80ETC concert", qualityDifference: { item in
+            if item.sellIn > 10 {
+                return 1
+            } else if item.sellIn > 5 {
+                return 2
+            } else if item.sellIn > 0 {
+                return 3
+            } else {
+                return -item.quality
+            }
+        }),
+        Rule(match: "Sulfuras, Hand of Ragnaros", qualityDifference: { _ in 0 }),
+        Rule(match: "Conjured", qualityDifference: { item in
+            item.sellIn > 0 ? -2 : -4
+        })
+    ]
+    
     // Morgan's Law
     // !A && !B <=> !(A || B)
     fileprivate func updateQuality(of item: Item) {
         let difference: Int
 
-        if item.name == "Aged Brie" {
-            if item.sellIn > 0 {
-                difference = 1
-            } else {
-                difference = 2
-            }
-        } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
-            if item.sellIn > 10 {
-                difference = 1
-            } else if item.sellIn > 5 {
-                difference = 2
-            } else if item.sellIn > 0 {
-                difference = 3
-            } else {
-                difference =  -item.quality
-            }
-        } else if item.name == "Sulfuras, Hand of Ragnaros" {
-            difference = 0
-        } else if item.name == "Conjured" {
-            if item.sellIn > 0 {
-                difference = -2
-            } else {
-                difference = -4
-            }
+        if let rule = rules.first(where: { item.name == $0.match }) {
+            difference = rule.qualityDifference(item)
         } else {
             if item.sellIn > 0 {
                 difference = -1
